@@ -1,0 +1,122 @@
+﻿@model ProductSaleINFO.Models.VmSale
+@{
+    ViewData["Title"] = "Index";
+    var listSaleMaster = ViewData["list"] as List<ProductSaleINFO.Data.SaleMaster>;
+    var CreateDate = Model.CreateDate == null ? "" : Convert.ToDateTime(Model.CreateDate).ToString("yyyy-yy-dd");
+    var ButtonValue = Model.SaleId > 0 ? "Update" : "Add";
+    var indexItem = 0;
+}
+
+<h1>Single page Master Details(ProductSaleINFO)</h1>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken();
+    @Html.HiddenFor(m=>m.SaleId)
+    @Html.LabelFor(m=>m.CreateDate)
+    <br />
+    <input type="date" name="CreateDate" id="CreateDate" value="@CreateDate" />
+    <br />
+    @Html.LabelFor(m=>m.CustomerName)
+    <br />
+    @Html.TextBoxFor(m=>m.CustomerName)
+    <br />
+    <div>
+        @Html.LabelFor(m=>m.Gender)<br />
+        @Html.RadioButtonFor(m=>m.Gender,"Female")Female
+        @Html.RadioButtonFor(m=>m.Gender,"Male")Male
+    </div>
+    @Html.LabelFor(m=>m.Email)
+    <br />
+    @Html.TextBoxFor(m=>m.Email)
+    <br />
+    @Html.LabelFor(m=>m.Phone)
+    <br />
+    @Html.TextBoxFor(m=>m.Phone)
+    <br />
+    <br />
+    @Html.LabelFor(m=>m.Photo)
+    <br />
+    <input type="file" name="Photo" id="Photo"/>
+    <br />
+    <button type="submit">@ButtonValue</button>
+    <a href="/Home/Index">reset</a>
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ProductName</th>
+                    <th>Color</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>
+                        <button type="button" onclick="addItem();">AddItem</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tsd">
+                @foreach (var item in Model.Details)
+                {
+                    indexItem++;
+                    <tr id="tr_@indexItem">
+                        <td><input type="text" id="ProductName" name="ProductName" value="@item.ProductName" /></td>
+                        <td><input type="text" id="Color" name="Color" value="@item.Color" /></td>
+                        <td><input type="text" id="Price" name="Price" value="@item.Price" /></td>
+                        <td><input type="text" id="Qty" name="Qty" value="@item.Qty" /></td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Photo</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+
+        @foreach (var item in listSaleMaster)
+        {
+            <tr>
+                <td>@item.CreateDate</td>
+                <td>@item.CustomerName</td>
+                <td>@item.Gender</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>@item.Photo</td>
+                <td>
+                    <a href="/Sale/Index?id=@item.SaleId">Edit</a>
+                </td>
+                <td>
+                    <a href="/Sale/Delele?id=@item.SaleId" onclick="return confirm('Are you sure delete this')">Delele</a>
+                </td>
+            </tr>
+        }
+    </table>
+
+
+}
+<script>
+    indexItem=@indexItem;
+    function addItem(){
+        indexItem+=1;
+        var TSD='<tr="tr_'+indexItem+'" ><td><input type="text"id = "ProductName"name = "ProductName"value = ""/></td>'
+            +'<td><input type="text" id = "Color" name = "Color" value = "" /></td>'
+                +'<td><input type="text"id = "Price"name = "Price"value = ""/></td>'
+                    +'<td><input type="text"id = "Qty"name = "Qty"value = ""/></td>'
+                        +'</tr>';
+                        document.getElementById('tsd').innerHTML+=TSD;
+
+
+    }
+</script>
+
+
+
+
+
